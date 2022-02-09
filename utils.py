@@ -136,13 +136,13 @@ class KGProcessor(object):
     def get_dev_examples(self, data_dir):
         """See base class."""
         return self._create_examples(
-            self._read_tsv(os.path.join(data_dir, "test_f_.csv")), "dev", data_dir)
+            self._read_tsv(os.path.join(data_dir, "test__s.csv")), "dev", data_dir)
 
     def get_test_examples(self, data_dir):
         """See base class."""
         print("get_test_examples")
         return self._create_examples(
-           self._read_tsv(os.path.join(data_dir, "test_f_.csv")), "test", data_dir)
+           self._read_tsv(os.path.join(data_dir, "test__s.csv")), "test", data_dir)
 
     def get_labels(self, data_dir):
         """Gets the list of labels for this data set."""
@@ -253,7 +253,7 @@ class KGProcessor(object):
     @classmethod
     def get_test_triples(self, data_dir):
         """Gets test triples."""
-        return self._read_tsv(os.path.join(data_dir, "test_f_.csv"))
+        return self._read_tsv(os.path.join(data_dir, "test__s.csv"))
 
     @classmethod
     def _read_tsv(cls, input_file, quotechar=None):
@@ -402,9 +402,9 @@ class LPProcessor(KGProcessor):
     def get_test_triples(self, data_dir, entity=False):
         """Gets training triples."""
         if entity:
-            return self._get_triples_q(os.path.join(data_dir, "test_f_.csv"), entity=True, count=15951923)
+            return self._get_triples_q(os.path.join(data_dir, "test__s.csv"), entity=True, count=15951923)
         else:
-            return self._get_triples_q(os.path.join(data_dir, "test_f_.csv"), count=15951923)
+            return self._get_triples_q(os.path.join(data_dir, "test__s.csv"), count=15951923)
         
     def get_test_neg_triples(self, data_dir, entity=False):
         """Gets training triples."""
@@ -431,7 +431,7 @@ class LPProcessor(KGProcessor):
         """See base class."""
         print("get_test_examples")
         return self._create_examples_q(
-           self._read_tsv(os.path.join(data_dir, "test_f_.csv")), "test", data_dir)
+           self._read_tsv(os.path.join(data_dir, "test__s.csv")), "test", data_dir)
     
     def get_test_neg_examples(self, data_dir):
         """See base class."""
@@ -684,36 +684,18 @@ def lp_convert_examples_to_features(examples, label_list, max_seq_length, rel_to
     label_map = {label : i for i, label in enumerate(label_list)}
     features = np.empty([len(examples)],dtype=InputFeatures)
     for (ex_index, example) in enumerate(examples):
-        #if ex_index % 10000 == 0 and print_info:
-        #    logger.info("Writing example %d of %d" % (ex_index, len(examples)))
-
-        #tokens_a = example.text_a.strip().split(" ")#tokenizer.tokenize(example.text_a)
-        #tokens_a = self._tokenize(example.text_a,rel_tokenizer)
-        #print(example)
         tokens_a = tokenizer.tokenize(example.text_a)
-        #print("tokens_a",tokens_a)
         tokens_b = None
         tokens_c = None
         tokens_b2 = None
         tokens_c2 = None
 
         if example.text_b2 and example.text_c2:
-            #tokens_b = example.text_b.strip().split(" ")#tokenizer.tokenize(example.text_b)
-            #tokens_b = [example.text_b] self._tokenize(example.text_b,rel_tokenizer)
-            #tokens_c = example.text_c.strip().split(" ")#tokenizer.tokenize(example.text_c)
-            #tokens_c = self._tokenize(example.text_c,rel_tokenizer)
             tokens_b2 = rel_tokenizer.tokenize(example.text_b2)
-            #tokens_b2 = [example.text_b2] self._tokenize(example.text_b2,rel_tokenizer)
             tokens_c2 = tokenizer.tokenize(example.text_c2)
-            #tokens_C2 = self._tokenize(example.text_C2,rel_tokenizer)
-            #tokens_a = tokenizer.tokenize(example.text_a)+rel_tokenizer.tokenize(example.text_b)+tokenizer.tokenize(example.text_c)
             _truncate_seq_triple(tokens_a, tokens_b2, tokens_c2, max_seq_length - 4)
         
         if example.text_b and example.text_c:
-            #tokens_b = example.text_b.strip().split(" ")#tokenizer.tokenize(example.text_b)
-            #tokens_b = [example.text_b] self._tokenize(example.text_b,rel_tokenizer)
-            #tokens_c = example.text_c.strip().split(" ")#tokenizer.tokenize(example.text_c)
-            #tokens_c = self._tokenize(example.text_c,rel_tokenizer)
             tokens_b = rel_tokenizer.tokenize(example.text_b)
             tokens_c = tokenizer.tokenize(example.text_c)
             _truncate_seq_triple(tokens_a, tokens_b, tokens_c, max_seq_length - 4)
@@ -1186,15 +1168,15 @@ class RPProcessor(KGProcessor):
     def get_test_triples(self, data_dir, entity=False):
         """Gets training triples."""
         if entity:
-            return self._get_triples_q(os.path.join(data_dir, "test_f_.csv"), entity=True, count=15951923)
+            return self._get_triples_q(os.path.join(data_dir, "test__s.csv"), entity=True, count=15951923)
         else:
-            return self._get_triples_q(os.path.join(data_dir, "test_f_.csv"), count=15951923)
+            return self._get_triples_q(os.path.join(data_dir, "test__s.csv"), count=15951923)
     
     def get_test_examples(self, data_dir):
         """See base class."""
         print("get_test_examples")
         return self._create_examples_q(
-           self._read_tsv(os.path.join(data_dir, "test_f_.csv")), "test", data_dir)
+           self._read_tsv(os.path.join(data_dir, "test__s.csv")), "test", data_dir)
     
     def _get_triples(self, file_path, entity=False,count=0):
         triples = []
@@ -1326,25 +1308,16 @@ def rp_convert_examples_to_features(examples, label_list, max_seq_length, rel_to
         #if ex_index % 100000 == 0 and print_info:
         #    logger.info("Writing example %d of %d" % (ex_index, len(examples)))
         
-        #if(ex_index%100000==True):
-        #    print(ex_index)
-
-        #tokens_a = example.text_a.strip().split(" ")#tokenizer.tokenize(example.text_a)
-        #tokens_a = self._tokenize(example.text_a,rel_tokenizer)
-        #print(example)
         tokens_a = tokenizer.tokenize(example.text_a)
 
 
         tokens_b = None
         if example.text_b:
-            #tokens_b = example.text_b.strip().split(" ")#tokenizer.tokenize(example.text_b)
-            #tokens_b = self._tokenize(example.text_b,rel_tokenizer)
             tokens_b = tokenizer.tokenize(example.text_b)
             _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
         else:
             if len(tokens_a) > max_seq_length - 2:
                 tokens_a = tokens_a[:(max_seq_length - 2)]
-        #seq_len = len(tokens_a)+len(tokens_a)+3
         tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
         segment_ids = [0] * len(tokens)
 
@@ -1370,14 +1343,14 @@ def rp_convert_examples_to_features(examples, label_list, max_seq_length, rel_to
 
         label_id = label_map[example.label]
 
-        if ex_index < 5 and print_info:
-            logger.info("*** Example ***")
-            logger.info("guid: %s" % (example.guid))
-            logger.info("tokens: %s" % " ".join([str(x) for x in tokens]))
-            logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-            logger.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-            logger.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-            logger.info("label: %s (id = %d)" % (example.label, label_id))
+        #if ex_index < 5 and print_info:
+        #    logger.info("*** Example ***")
+        #    logger.info("guid: %s" % (example.guid))
+        #    logger.info("tokens: %s" % " ".join([str(x) for x in tokens]))
+        #    logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+        #    logger.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
+        #    logger.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
+        #    logger.info("label: %s (id = %d)" % (example.label, label_id))
 
         #if(ex_index==0):
         features[ex_index]=InputFeatures(input_ids=input_ids,
